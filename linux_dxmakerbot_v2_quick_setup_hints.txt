@@ -1,0 +1,74 @@
+                 ################################
+                 # WITHOUT WARRANTY OF ANY KIND #
+                 ################################
+                 
+########################################################################
+# Blocknet dxmakerbot version 2 UNOFFICIAL quick setup hints for Linux
+########################################################################
+
+########################################################################
+# main online sources
+########################################################################
+
+https://github.com/blocknetdx/dxmakerbot
+    blocknet official dxmakerbot trading bot source
+ 
+https://github.com/nnmfnwl7/dxmakerbot/tree/fazer_dxmakerbot_latest_beta
+    blocknet unofficial dxmakerbot trading bot source by Fazer
+    
+#######################################################################
+# download dxmakerbot automatic BlockDX trading/liquidity/autosell bot
+########################################################################
+
+ # using unofficial fazers beta version of dxmakerbot because official repository is very deprecated
+
+ # choose directory for dxmakerbot
+DXMBOTDIR="${HOME}/Downloads/cryptotrading/dxmakerbot"
+
+ # create if not exist directory for xmakerbot
+mkdir -p $DXMBOTDIR
+
+ # change directory to dxmakerbot directory
+cd $DXMBOTDIR
+
+ # clone repository from github
+git clone https://github.com/nnmfnwl7/dxmakerbot.git git.source
+
+ # change directory to dxmakerbot directory source
+cd git.source
+
+ # checkout fazers latest beta version
+git checkout origin/fazer_dxmakerbot_latest_beta
+
+########################################################################
+# configure dxmakerbot
+########################################################################
+
+ # Once blockdx is configured, automatically copy rpc user and password from BlockDX to dxmakerbot configuration
+cd $DXMBOTDIR/git.source
+echo "tradingaddress = {}" >> utils/dxsettings.py
+echo "rpcport = 41414" >> utils/dxsettings.py
+tempusrpass=`cat ~/.blocknet/blocknet.conf | grep rpcuser | cut -d "=" -f2`
+echo "rpcuser = '$tempusrpass'" >> utils/dxsettings.py
+tempusrpass=""
+tempusrpass=`cat ~/.blocknet/blocknet.conf | grep rpcpassword | cut -d "=" -f2`
+echo "rpcpassword = '$tempusrpass'" >> utils/dxsettings.py
+tempusrpass=""
+
+ # copy example dxmakerbot v2 configurations
+cp howto/examples/bot_v2_sell_block_buy_ltc.py ./bot_v2_sell_block_buy_ltc.py
+cp howto/examples/bot_v2_sell_ltc_buy_block.py ./bot_v2_sell_ltc_buy_block.py
+
+ # manually edit config files by your needs, but at least --makeraddress and --takeraddress is needed to edit
+geany bot_v2_sell_block_buy_ltc.py
+geany bot_v2_sell_ltc_buy_block.py
+
+ # finally run makerbots by commands
+python3 bot_v2_sell_block_buy_ltc.py
+python3 bot_v2_sell_ltc_buy_block.py
+
+ # watch makerbots console for errors, watch BlockDX for newly created Active orders.
+ 
+ # when you want to turn off makerbots and let wallets running do not forget to cancel opened orders, you can do it directly by BlockDX interface in section active orders :)
+ 
+ # We done it :)
