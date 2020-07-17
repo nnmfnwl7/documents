@@ -6,6 +6,8 @@
 # Blocknet dxmakerbot version 2 UNOFFICIAL quick setup hints for Linux
 ########################################################################
 
+ # tutorial expects you already have blocknet wallet and BlockDX setup and ready
+
 ########################################################################
 # main online sources
 ########################################################################
