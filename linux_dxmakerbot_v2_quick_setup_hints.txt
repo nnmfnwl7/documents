@@ -40,7 +40,7 @@ git clone https://github.com/nnmfnwl7/dxmakerbot.git git.source
 cd git.source
 
  # checkout fazers latest beta version
-git checkout origin/fazer_dxmakerbot_latest_beta
+git checkout origin/fazer_dxmakerbot_latest_alfa
 
 ########################################################################
 # configure dxmakerbot
@@ -65,9 +65,15 @@ cp howto/examples/bot_v2_sell_ltc_buy_block.py ./bot_v2_sell_ltc_buy_block.py
 geany bot_v2_sell_block_buy_ltc.py
 geany bot_v2_sell_ltc_buy_block.py
 
- # finally run makerbots by commands
-python3 bot_v2_sell_block_buy_ltc.py
-python3 bot_v2_sell_ltc_buy_block.py
+########################################################################
+# run makerbots by commands
+########################################################################
+ 
+ # run bot which sells blocknet for litecoin
+python3 dxmakerbot_v2_run.py --config bot_v2_sell_block_buy_ltc
+
+ # run bot which sells litecoin for blocknet
+python3 dxmakerbot_v2_run.py --config bot_v2_sell_ltc_buy_block
 
  # watch makerbots console for errors, watch BlockDX for newly created Active orders.
  

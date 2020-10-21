@@ -1,0 +1,283 @@
+                 ################################
+                 # WITHOUT WARRANTY OF ANY KIND #
+                 ################################
+
+
+########################################################################
+# welcome in Blocknet BlockDX dxmakerbot UNOFFICIAL tutorial for Linux(debian)
+########################################################################
+
+Hello everyone and Welcome in Unoffical dxmakerbot and blockdx tutorial.
+
+This is very short, not-detailed tutorial how to:
+ -- main online sources
+ -- install software dependencies
+ -- store passwords in encrypted keepassx database
+ -- build litecoin wallet
+ -- build bitcoin wallet
+ -- build blocknet wallet
+ -- download BlockDX decentralized exchange
+ -- download dxmakerbot automatic BlockDX trading/liquidity/autosell bot
+ -- start whole ecosystem and trade or autotrade by bot
+
+########################################################################
+# main online sources
+########################################################################
+
+https://blocknet.co/
+    blocknet official webpage
+ 
+https://github.com/blocknetdx/blocknet
+    blocknet official wallet source
+ 
+https://github.com/blocknetdx/block-dx
+    blocknet official BlockDX decentralied exchange source
+ 
+https://github.com/blocknetdx/dxmakerbot
+    blocknet official dxmakerbot trading bot source
+ 
+https://github.com/nnmfnwl7/dxmakerbot/tree/fazer_dxmakerbot_latest_beta
+    blocknet unofficial dxmakerbot trading bot source by Fazer
+
+https://bitcoincore.org/
+    bitcoin official website
+    
+https://github.com/bitcoin/bitcoin
+    bitcoin official wallet source
+
+https://litecoin.org/
+    litecoin official website
+
+https://github.com/litecoin-project/litecoin
+    litecoin official wallet source
+
+########################################################################
+# install software dependencies
+########################################################################
+
+ # Some dependencies packages can be missing or otherwise named 
+apt install git gitg keepassx make cmake clang clang-tools clang-format libboost-all-dev wget qt5-qmake-bin qt5-qmake qttools5-dev-tools qttools5-dev qtbase5-dev-tools qtbase5-dev libqt5charts5-dev 
+
+########################################################################
+# store passwords in encrypted keepassx database
+########################################################################
+
+ # First time run keepassx:
+Menu >> database >> new database >> Create UNIQUE nowhere else used 
+password with chars,special and number characters, 
+maybe write it down on some paper and hide until you 100% sure you
+remember your password. NEVER Use password which you already using.
+This password will be master password to all your generated passwords 
+encrypted database.
+
+ # Generate some new passwords will be used by wallets to decrypt:
+Click >> Menu >> Entries >> Add Entry
+Or >> CTRL+N
+Fill >> Title >> Blocknet Trading Wallet
+Click >> Gen. >> Choose length min 64 chars >> Check A-Z, a-z, 0-9 >> DO NOT check /*_ because entering special charaters password on command line can mean action. >>
+check Exclude >> check Ensure >> Manually add some new passwords characters to be sure password is best random >> Click Accept
+
+ # Generate same way also new entry as >> Bitcoin Trading Wallet
+
+ # Generate same way also new entry as >> Litecoin Trading Wallet
+
+ # Save encrypted passwords database:
+Menu >> database >> save database >> choose file name and save.
+Or >> CTRL+S >> choose file name and save.
+
+ # good to save encrypted database file as ~/.keepassxxx/cryptotrading.kdbx because next tutorial commands...
+
+ # Backup!!! encrypted passwords database >> Copy saved file to EXTERNAL USB
+ # !!!It is not recommended to backup encrypted password database to email!!!
+
+ # running kepassx next time is good to run it by:
+keepassx ~/.keepassxxx/cryptotrading.kdbx
+othervise you can try to >> click >> menu >> databases >> recent databases
+
+########################################################################
+# build litecoin wallet
+########################################################################
+
+ # to compile run these commands and after every command check if echo $? prints value zero, otherwise error has been occurred and you must check and find solution:
+ # also after running configure wallet you must check if at the end of debug there is information QT wallet YES, otherwise you must check and find solution, probably some missing packages to install.
+
+mkdir -p ~/Downloads/cryptotrading/litecoin
+cd ~/Downloads/cryptotrading/litecoin
+git clone  https://github.com/litecoin-project/litecoin.git git.source
+cd git.source
+sh autogen.sh
+make -j4 -C depends bdb
+tar xvzf depends/built/x86_64-pc-linux-gnu/bdb/*.tar.gz -C ./depends/x86_64-pc-linux-gnu/
+./configure LDFLAGS="-L`pwd`/depends/x86_64-pc-linux-gnu/lib/" CPPFLAGS="-I`pwd`/depends/x86_64-pc-linux-gnu/include/" --disable-bench --disable-gui-tests --disable-tests --enable-static 
+make -j4
+
+########################################################################
+# build bitcoin wallet
+########################################################################
+
+ # to compile run these commands and after every command check if echo $? prints value zero, otherwise error has been occurred and you must check and find solution:
+ # also after running configure wallet you must check if at the end of debug there is information QT wallet YES, otherwise you must check and find solution, probably some missing packages to install.
+
+mkdir -p ~/Downloads/cryptotrading/bitcoin
+cd ~/Downloads/cryptotrading/bitcoin
+git clone https://github.com/bitcoin/bitcoin.git git.source
+cd git.source
+git checkout origin/0.20
+sh autogen.sh
+make -j4 -C depends bdb
+tar xvzf depends/built/x86_64-pc-linux-gnu/bdb/*.tar.gz -C ./depends/x86_64-pc-linux-gnu/
+./configure LDFLAGS="-L`pwd`/depends/x86_64-pc-linux-gnu/lib/" CPPFLAGS="-I`pwd`/depends/x86_64-pc-linux-gnu/include/" --disable-bench --disable-gui-tests --disable-tests --enable-static 
+make -j4
+
+########################################################################
+# build blocknet wallet
+########################################################################
+
+ # to compile run these commands and after every command check if echo $? prints value zero, otherwise error has been occurred and you must check and find solution:
+ # also after running configure wallet you must check if at the end of debug there is information QT wallet YES, otherwise you must check and find solution, probably some missing packages to install.
+
+mkdir -p ~/Downloads/cryptotrading/blocknet
+cd ~/Downloads/cryptotrading/blocknet
+git clone https://github.com/blocknetdx/blocknet.git git.source
+cd git.source
+git checkout origin/4.3.1
+sh autogen.sh
+make -j3 -C depends bdb boost
+tar xvzf depends/built/x86_64-pc-linux-gnu/bdb/*.tar.gz -C ./depends/x86_64-pc-linux-gnu/
+tar xvzf depends/built/x86_64-pc-linux-gnu/boost/*.tar.gz -C ./depends/x86_64-pc-linux-gnu/
+./configure LDFLAGS="-L`pwd`/depends/x86_64-pc-linux-gnu/lib/" CPPFLAGS="-I`pwd`/depends/x86_64-pc-linux-gnu/include/" --with-boost-libdir=`pwd`/depends/x86_64-pc-linux-gnu/lib/ --disable-bench --disable-gui-tests --disable-tests --enable-reduce-exports --enable-static 
+make -j3
+
+ # in case of compilation errors you can try with clang and continue with configure... command
+make clean
+export CC=clang
+export CXX=clang++
+
+########################################################################
+# download blockdx decentralized exchange
+########################################################################
+
+ # using wget link can be deprecated, you can check if newer version is available by visiting webpage https://github.com/blocknetdx/block-dx/releases 
+
+mkdir -p ~/Downloads/cryptotrading/blockdx
+cd ~/Downloads/cryptotrading/blockdx
+wget https://github.com/blocknetdx/block-dx/releases/download/v1.8.0/BLOCK-DX-1.8.0-linux.tar.gz
+tar xvzf BLOCK-DX-1.8.0-linux.tar.gz
+
+########################################################################
+# download dxmakerbot automatic BlockDX trading/liquidity/autosell bot
+########################################################################
+
+ # using unofficial fazers beta version of dxmakerbot because official repository is very deprecated
+
+mkdir -p ~/Downloads/cryptotrading/dxmakerbot
+cd ~/Downloads/cryptotrading/dxmakerbot
+git clone https://github.com/nnmfnwl7/dxmakerbot.git git.source
+cd git.source
+git checkout origin/fazer_dxmakerbot_latest_alfa
+
+########################################################################
+# first time run and configure all wallets and backup wallets
+########################################################################
+
+ # if you not have keepassx running and decrypted, run command
+keepassx ~/.keepassxxx/cryptotrading.kdbx
+enter password >> push enter
+
+ # first time run blocknet wallet by command:
+cd ~/Downloads/cryptotrading/blocknet/git.source/src/qt/ && ./blocknet-qt -printtoconsole -datadir=${HOME}/.blocknet/ -wallet=wallet_block_cryptotrading -classic=1
+
+ # first time run litecoin wallet by command:
+cd ~/Downloads/cryptotrading/litecoin/git.source/src/qt/ && ./litecoin-qt -printtoconsole -datadir=${HOME}/.litecoin/ -wallet=wallet_ltc_cryptotrading
+
+ # first time run bitcoin wallet by command:
+cd ~/Downloads/cryptotrading/bitcoin/git.source/src/qt/ && ./bitcoin-qt -printtoconsole -datadir=${HOME}/.bitcoin/ -wallet=wallet_btc_cryptotrading
+
+ # wait until wallets are running and for all wallets
+click >> menu >> Setting >> Encrypt wallet >> click on password input >> click on keepassx wallet to maximize >> push ctrl + v >> keepassx will minimize and fill password
+ # wait until process done, some wallets will require restart
+
+ # as not all wallets have HD key generation feature enabled, best practice is to generate some few maybe 10 new addresses and name it before backing up wallet.
+click >> TAB >> receive >> fill Label 001 >> click >> Request payment >> fill Label 002 >> click >> ...next...
+
+ # Backup!!! encrypted blocknet wallet.dat file >> Copy saved file to EXTERNAL USB
+~/.blocknet/wallet_block_cryptotrading/wallet.dat
+or click >> menu >> file >> backup wallet and save it somewhere on EXTERNAL USB >> name it blocknet_wallet.dat
+
+ # Backup!!! encrypted litecoin wallet.dat file >> Copy saved file to EXTERNAL USB
+~/.litecoin/wallet_ltc_cryptotrading/wallet.dat
+or click >> menu >> file >> backup wallet and save it somewhere on EXTERNAL USB >> name it litecoin_wallet.dat
+
+ # Backup!!! encrypted bitcoin wallet.dat file >> Copy saved file to EXTERNAL USB
+~/.bitcoin/wallet_btc_cryptotrading/wallet.dat
+or click >> menu >> file >> backup wallet and save it somewhere on EXTERNAL USB >> name it bitcoin_wallet.dat
+
+ # Great is now you have all backups secured and done :)
+Restoring wallet means turning off wallets and restore .dat files and rename em to wallet.dat 
+
+########################################################################
+# configure BlockDX and dxmakerbot
+########################################################################
+
+ # first time run BlockDX to configure it
+cd ~/Downloads/cryptotrading/blockdx/BLOCK-DX-1.7.0-linux/ && ./block-dx
+ # if you experience an error about sandboxing application you can try alternative command
+cd ~/Downloads/cryptotrading/blockdx/BLOCK-DX-1.7.0-linux/ && ./block-dx --no-sandbox
+
+choose quick setup >> and handle :)
+
+ # Once blockdx is configured, automatically copy rpc user and password from BlockDX to dxmakerbot configuration
+cd ~/Downloads/cryptotrading/dxmakerbot/git.source
+echo "tradingaddress = {}" >> utils/dxsettings.py
+echo "rpcport = 41414" >> utils/dxsettings.py
+tempusrpass=`cat ~/.blocknet/blocknet.conf | grep rpcuser | cut -d "=" -f2`
+echo "rpcuser = '$tempusrpass'" >> utils/dxsettings.py
+tempusrpass=""
+tempusrpass=`cat ~/.blocknet/blocknet.conf | grep rpcpassword | cut -d "=" -f2`
+echo "rpcpassword = '$tempusrpass'" >> utils/dxsettings.py
+tempusrpass=""
+
+ # copy example dxmakerbot v2 configurations
+cp howto/examples/bot_v2_sell_block_buy_ltc.py ./bot_v2_sell_block_buy_ltc.py
+cp howto/examples/bot_v2_sell_ltc_buy_block.py ./bot_v2_sell_ltc_buy_block.py
+
+ # manually edit config files by your needs, but at least --makeraddress and --takeraddress is needed to edit
+edit bot_v2_sell_block_buy_ltc.py
+edit bot_v2_sell_ltc_buy_block.py
+
+########################################################################
+# start whole ecosystem and trade or autotrade by bot
+########################################################################
+
+ # if you not have keepassx running and decrypted, run command
+keepassx ~/.keepassxxx/cryptotrading.kdbx
+enter password >> push enter
+
+ # if you not have running blocknet wallet and decrypted run it by command:
+cd ~/Downloads/cryptotrading/blocknet/git.source/src/qt/ && ./blocknet-qt -printtoconsole -datadir=${HOME}/.blocknet/ -wallet=wallet_block_cryptotrading -classic=1
+Click >> menu >> setting >> unlock wallet >> click on password entry >> maximize keepassx >> click on blocknet >> push ctrl+v >> password will be auto entered.
+
+ # run litecoin wallet by command:
+cd ~/Downloads/cryptotrading/litecoin/git.source/src/qt/ && ./litecoin-qt -printtoconsole -datadir=${HOME}/.litecoin/ -wallet=wallet_ltc_cryptotrading
+Click >> menu >> window >> console >> write >> walletpassphrase "" 9999999999 >> let cursor in the middle of "" characters >> maximize keepassx >> click on litecoin >> push ctrl+v >> password will be auto entered.
+
+ # run bitcoin wallet by command:
+cd ~/Downloads/cryptotrading/bitcoin/git.source/src/qt/ && ./bitcoin-qt -printtoconsole -datadir=${HOME}/.bitcoin/ -wallet=wallet_btc_cryptotrading
+Click >> menu >> window >> console >> write walletpassphrase "" 9999999999 >> let cursor in the middle of "" characters >> maximize keepassx >> click on bitcoin >> push ctrl+v >> password will be auto entered.
+
+ # run BlockDX exchange
+cd ~/Downloads/cryptotrading/blockdx/BLOCK-DX-1.8.0-linux/ && ./block-dx --no-sandbox
+click on >> top TAB >> select market pair >> click BLOCK >> click LTC >> click select
+
+ # finally run makerbots by commands
+  # run bot which sells blocknet for litecoin
+python3 dxmakerbot_v2_run.py --config bot_v2_sell_block_buy_ltc
+
+  # run bot which sells litecoin for blocknet
+python3 dxmakerbot_v2_run.py --config bot_v2_sell_ltc_buy_block
+
+ # watch makerbots console for errors, watch BlockDX for newly created Active orders.
+ 
+ # when you want to turn off makerbots and let wallets running do not forget to cancel opened orders, you can do it directly by BlockDX interface in section active orders :)
+ 
+ # We done it :)
