@@ -142,7 +142,7 @@
     
 ### <SERVER> enable pubkey auth on server and test if it is working
     joe /etc/ssh/sshd_config
-        # update config about lines or change lines to:
+        # update config about line or change line to:
             PubkeyAuthentication yes
                 # save file ctrl + k + x
                     # restart ssh service
@@ -224,26 +224,37 @@
                 
 ### how to unlock wallet by password for your crypto currency without been exposed to screen or bash history
     
-    # run separated blocknet wallet used only for staking example command
+    # run separated blocknet wallet(at direcotry ~/.blocknet_staking) used only for staking example command
         cd ~/Downloads/cryptotrading/blocknet/git.source/src/ && ./blocknetd -printtoconsole -nodebuglogfile -datadir=$HOME/.blocknet_staking/ -wallet=wallet_block_staking
+            # securelly unlock staking wallet for staking only
+                ./blocknet-cli -datadir=$HOME/.blocknet_staking/ walletpassphrase "$(read -sp "pwd" undo; echo $undo;undo=)" 9999999999 true
         
     # run blocknet wallet used for DEX dxbot trading/liquidity example command
         cd ~/Downloads/cryptotrading/blocknet/git.source/src/ && ./blocknetd -printtoconsole -nodebuglogfile -datadir=$HOME/.blocknet/ -wallet=wallet_block_dex
+            # some wallets needs workaround like this to fully unlock wallet
+                ./blocknet-cli walletpassphrase "$(read -sp "pwd" undo; echo $undo;undo=)" 9999999999
         
     # run bitcoin wallet used for DEX dxbot trading/liquidity example command
         cd ~/Downloads/cryptotrading/bitcoin/git.source/src/ && ./bitcoind -printtoconsole -nodebuglogfile -datadir=$HOME/.bitcoin/ -wallet=wallet_btc_dex
-    
+            # some wallets cli like bitcoin support new secure way to unlock wallet
+                ./bitcoin-cli -stdinwalletpassphrase walletpassphrase 9999999999
+        
     # run litecoin wallet used for DEX dxbot trading/liquidity example command
         cd ~/Downloads/cryptotrading/litecoin/git.debian/src/ && ./litecoind -printtoconsole -nodebuglogfile -datadir=$HOME/.litecoin/  -wallet=wallet_ltc_dex
-        
-    # some wallets cli like bitcoin support new secure way to unlock wallet
-        ./bitcoin-cli -stdinwalletpassphrase walletpassphrase 9999999999
+            # some wallets needs workaround like this to fully unlock wallet
+                ./litecoin-cli walletpassphrase "$(read -sp "pwd" undo; echo $undo;undo=)" 9999999999
     
-    # some wallets needs workaround like this to unlock wallet for staking only
-        ./blocknet-cli -port41415 walletpassphrase "$(read -sp "aaaaa" undo; echo $undo;undo=)" 9999999999 true
-        
-    # some wallets needs workaround like this to fully unlock wallet
-        ./blocknet-cli walletpassphrase "$(read -sp "aaaaa" undo; echo $undo;undo=)" 9999999999
+    # other usefull cli RPC command examples
+        help
+        hepp <command>
+        getstakingstatus
+        getwalletinfo
+        listunspent
+        getconnectioncount
+        getpeerinfo
+        listbanned
+        clearbanned
+        setnetworkactive 0/1
     
 ### server summary:
     # server accessible trough SSH stealth onion hidden service
