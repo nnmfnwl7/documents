@@ -209,6 +209,7 @@
         joe ~/.litecoin/litecoin.conf
         joe ~/.bitcoin/bitcoin.conf
             # with new/updated lines
+                server=1 #need for RPC CLI
                 #~ port=41416    if some wallets needs to be running multiple times is good to change port
                 #~ rpcport=41418 if some wallets needs to be running multiple times is good to change RPC port
                 listen=1
@@ -246,10 +247,12 @@
     
     # other usefull cli RPC command examples
         help
-        hepp <command>
+        help <command> # more help and command usage
         getstakingstatus
         getwalletinfo
-        listunspent
+        listreceivedbyaddress 0 true | grep -e address -e label # list all generated addresses, also zero balance
+        listunspent 0 | grep -e address -e label -e amount -e confirmations # list all utxos also 0 times confirmed
+        listaddressgroupings | grep -v -e "\[" -e "\]" # list already used addresses and actual balance
         getconnectioncount
         getpeerinfo
         listbanned
